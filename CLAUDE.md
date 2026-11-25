@@ -31,16 +31,26 @@ torrent-bot/
 ├── README.md
 ├── ARCHITECTURE.md
 ├── Dockerfile               # Alpine Node 20, runs npm ci --omit=dev
-├── package.json             # discord.js ^14, @anthropic-ai/sdk ^0.39
+├── package.json             # discord.js ^14, @anthropic-ai/sdk ^0.39, express, sharp
 ├── .env.example             # Template for required env vars
 ├── .gitignore               # Ignores node_modules/, .env
+├── archive/
+│   └── discord_bot_prototype.py  # first Python prototype, not run
+├── scripts/                 # one-off Prowlarr setup, need PROWLARR_API_KEY in the environment
+│   ├── add-indexers.py      # adds every public torrent indexer
+│   └── add-cf-indexers.py   # adds the Cloudflare-blocked ones (via FlareSolverr)
 └── src/
-    ├── index.js             # Discord client setup, command registration
+    ├── index.js             # Discord client setup, command registration, starts the dashboard
+    ├── dashboard.js         # express stats page + GET /api/stats, port 8083 (hardcoded)
+    ├── stats.js             # usage counters, kept in a file
     ├── commands/
-    │   └── search.js        # /search slash command handler + error handling
+    │   ├── search.js        # /search slash command handler + error handling
+    │   ├── ascii.js         # /ascii: image (URL or upload) to ASCII art
+    │   └── ping.js          # /ping: bot status and debug info
     ├── services/
     │   ├── parser.js        # Claude Haiku query parser → {title, quality, language, type, ...}
-    │   └── prowlarr.js      # Prowlarr API client, category mapping, seeder filtering
+    │   ├── prowlarr.js      # Prowlarr API client, category mapping, seeder filtering
+    │   └── ascii.js         # image → ASCII (sharp)
     └── utils/
         └── embed.js         # EmbedBuilder, magnet chunking, size formatting
 ```
