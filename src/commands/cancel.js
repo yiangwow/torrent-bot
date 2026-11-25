@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js");
+const { exec } = require("child_process");
 
 const data = new SlashCommandBuilder()
   .setName("cancel")
@@ -6,7 +7,13 @@ const data = new SlashCommandBuilder()
 
 async function execute(interaction) {
   await interaction.reply({ content: "🔄 Restarting bot — any stuck search will be cancelled." });
-  setTimeout(() => process.exit(0), 1000); // give Discord time to send the reply
+
+  // Restart the Docker container
+  setTimeout(() => {
+    exec("docker restart torrent-bot", (err) => {
+      if (err) console.error("Failed to restart container:", err);
+    });
+  }, 500);
 }
 
 module.exports = { data, execute };
